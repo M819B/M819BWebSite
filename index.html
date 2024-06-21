@@ -21,12 +21,12 @@
     }
 
     .wrapper {
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.8); /* Changed to black with some transparency */
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       text-align: center;
-      color: white;
+      color: white; /* Changed text color to white for better contrast */
     }
 
     #login-success-message, #login-error-message {
@@ -41,13 +41,13 @@
     }
 
     #login-success-message {
-      background-color: #ADD8E6;
+      background-color: #ADD8E6; /* light blue */
       color: black;
       font-size: 36px;
     }
 
     #login-error-message {
-      background-color: #ADD8E6;
+      background-color: #ADD8E6; /* light blue */
       color: black;
       font-size: 36px;
     }
@@ -86,8 +86,8 @@
       border: none;
       border-radius: 5px;
       outline: none;
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
+      background: rgba(255, 255, 255, 0.1); /* Slightly transparent input background */
+      color: white; /* White text for inputs */
     }
 
     .input-box i {
@@ -95,7 +95,7 @@
       right: 10px;
       top: 50%;
       transform: translateY(-50%);
-      color: white;
+      color: white; /* Icon color white */
     }
 
     .btn {
@@ -109,6 +109,10 @@
     }
 
     .register-link p, .register-link a {
+      color: white; /* White text for register link */
+    }
+
+    .remember-me {
       color: white;
     }
   </style>
@@ -130,6 +134,9 @@
         <input type="password" id="password" placeholder="Password" required>
         <i class='bx bxs-lock-alt'></i>
       </div>
+      <div class="remember-me">
+        <input type="checkbox" id="remember-me"> Remember Me
+      </div>
       <button type="submit" class="btn">Login</button>
       <div class="register-link">
         <p>Don't have an account? <a href="signup.html">Register</a></p>
@@ -137,6 +144,7 @@
     </form>
   </div>
 
+  <!-- New divs for displaying login success and error messages -->
   <div id="login-success-message">
     <p>Login Successfully</p>
     <button id="ok-button">OK</button>
@@ -148,38 +156,53 @@
   </div>
 
   <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const loggedIn = localStorage.getItem('loggedIn');
+      const username = localStorage.getItem('username');
+
+      if (loggedIn && username) {
+        window.location.href = 'home.html?username=' + encodeURIComponent(username);
+      }
+    });
+
     document.getElementById('login-form').addEventListener('submit', function (e) {
       e.preventDefault();
 
+      // Get form input values
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
+      const rememberMe = document.getElementById('remember-me').checked;
 
+      // Retrieve stored username and password from local storage
       const storedUsername = localStorage.getItem('username');
       const storedPassword = localStorage.getItem('password');
 
+      // Check if entered username and password match the stored data
       if (username === storedUsername && password === storedPassword) {
-        localStorage.setItem('loggedInUser', username);
+        // Save login state if "Remember Me" is checked
+        if (rememberMe) {
+          localStorage.setItem('loggedIn', 'true');
+        }
+        
+        // Show login success message
         document.getElementById('login-success-message').style.display = 'block';
-        window.location.href = 'home.html';
+        // Redirect to home.html with username as a parameter
+        window.location.href = 'home.html?username=' + encodeURIComponent(username);
       } else {
+        // Show error message
         document.getElementById('login-error-message').style.display = 'block';
       }
     });
 
+    // Add event listener for the OK button (success message)
     document.getElementById('ok-button').addEventListener('click', function() {
-      window.location.href = 'home.html';
+      window.location.href = 'home.html'; // Redirect to home.html
     });
 
+    // Add event listener for the OK button (error message)
     document.getElementById('error-ok-button').addEventListener('click', function() {
       document.getElementById('login-error-message').style.display = 'none';
     });
-
-    window.onload = function() {
-      const loggedInUser = localStorage.getItem('loggedInUser');
-      if (loggedInUser) {
-        window.location.href = 'home.html';
-      }
-    };
   </script>
 </body>
 </html>
