@@ -47,8 +47,8 @@
     }
 
     #login-error-message {
-      background-color: #ADD8E6; /* light blue */
-      color: black;
+      background-color: #FF6347; /* red for error */
+      color: white;
       font-size: 36px;
     }
 
@@ -152,19 +152,18 @@
     document.getElementById('login-form').addEventListener('submit', function (e) {
       e.preventDefault();
 
-      // Get form input values
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
 
-      // Retrieve stored username and password from local storage
-      const storedUsername = localStorage.getItem('username');
-      const storedPassword = localStorage.getItem('password');
+      // Retrieve stored users from localStorage
+      const users = JSON.parse(localStorage.getItem('users')) || [];
 
-      // Check if entered username and password match the stored data
-      if (username === storedUsername && password === storedPassword) {
-        // Show login success message
+      // Check if the entered credentials match any user in the list
+      const user = users.find(u => u.username === username && u.password === password);
+
+      if (user) {
+        // Show login success message and redirect
         document.getElementById('login-success-message').style.display = 'block';
-        // Redirect to home.html with username as a parameter
         window.location.href = 'home.html?username=' + encodeURIComponent(username);
       } else {
         // Show error message
@@ -172,12 +171,12 @@
       }
     });
 
-    // Add event listener for the OK button (success message)
+    // Add event listener for OK button (success message)
     document.getElementById('ok-button').addEventListener('click', function() {
-      window.location.href = 'home.html'; // Redirect to home.html
+      window.location.href = 'home.html';
     });
 
-    // Add event listener for the OK button (error message)
+    // Add event listener for OK button (error message)
     document.getElementById('error-ok-button').addEventListener('click', function() {
       document.getElementById('login-error-message').style.display = 'none';
     });
