@@ -147,42 +147,37 @@
     document.getElementById('signup-form').addEventListener('submit', function (e) {
       e.preventDefault();
 
-      // Get form input values
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirm-password').value;
 
-      // Check if passwords match
       if (password !== confirmPassword) {
         alert("Passwords do not match. Please try again.");
         return;
       }
 
-      // Check if username already exists in local storage
-      const existingUsername = localStorage.getItem('username');
-      if (existingUsername && existingUsername === username) {
-        // Show error message
+      // Retrieve existing users from localStorage
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+
+      // Check if username exists already
+      if (users.find(u => u.username === username)) {
         document.getElementById('register-error-message').style.display = 'block';
         return;
       }
 
-      // Save data to local storage
-      localStorage.setItem('username', username);
-      localStorage.setItem('password', password);
+      // Save new user to the list
+      users.push({ username: username, password: password });
+      localStorage.setItem('users', JSON.stringify(users));
 
-      // Show registration success message
+      // Show success message
       document.getElementById('register-success-message').style.display = 'block';
     });
 
-    // Add event listener for the OK button (success message)
     document.getElementById('ok-button').addEventListener('click', function() {
-      // Redirect to index.html
       window.location.href = 'index.html';
     });
 
-    // Add event listener for the OK button (error message)
     document.getElementById('ok-button-error').addEventListener('click', function() {
-      // Hide the error message
       document.getElementById('register-error-message').style.display = 'none';
     });
   </script>
