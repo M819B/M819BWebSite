@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="tab-title">M819 Dekuu</title>
+    <link rel="icon" type="image/png" href="dekuu-icon.png">
+    <style>
+        body {
+            background: linear-gradient(135deg, black, red, blue);
+            color: #ff4b5c;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        .profile-container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 75, 92, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 350px;
+            height: 350px;
+        }
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #ff4b5c;
+            animation: pulse 2s infinite;
+        }
+        .username, .info-box.animated {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #ff4b5c, #ff6b81);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid transparent;
+        }
+        .info-box {
+            background: #222;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 10px;
+            box-shadow: 0 0 10px rgba(255, 75, 92, 0.5);
+            width: 80%;
+            text-align: center;
+        }
+        .icons {
+            margin-top: 15px;
+        }
+        .icons a {
+            display: inline-block;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            animation: glow 2s infinite alternate;
+        }
+        .icons a:hover {
+            transform: scale(1.3) rotate(5deg);
+            opacity: 0.9;
+            filter: drop-shadow(0 0 10px #ff4b5c);
+        }
+        .icons img {
+            width: 25px;
+            margin: 5px;
+        }
+    </style>
+    <script>
+        function animateText(element, text, speed) {
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+        window.onload = function () {
+            animateText(document.getElementById("username"), "M819 Dekuu", 200);
+            animateText(document.getElementById("game-status"), "🎮 Playing Minecraft", 150);
+        };
+    </script>
+</head>
+<body>
+<div class="profile-container">
+    <img src="profile.png" alt="Profile Picture" class="profile-pic">
+    <div id="username" class="username"></div>
+    <div class="info-box">Playing Minecraft all day.</div>
+    <div id="game-status" class="info-box"></div>
+    <div class="icons">
+        <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="Youtube"></a>
+        <a href="https://www.roblox.com/users/1936761233/profile" target="_blank"><img src="roblox.png" alt="Roblox"></a>
+        <a href="https://discord.com/users/726790429055385620" target="_blank"><img src="discord.png" alt="Discord"></a>
+        <a href="https://open.spotify.com/user/31dgudzlolnvguv6mabfdf4vzzbe" target="_blank"><img src="spotify.png" alt="Spotify"></a>
+    </div>
+</div>
+</body>
+</html>
