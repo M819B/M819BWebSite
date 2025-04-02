@@ -17,6 +17,35 @@
             flex-direction: column;
             animation: fadeIn 1.5s ease-in-out;
         }
+        .music-controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .music-toggle {
+            background: #ff4b5c;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 0 10px rgba(255, 75, 92, 0.5);
+            margin-bottom: 5px;
+        }
+        .volume-slider {
+            width: 100px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 5px;
+            background: white;
+            outline: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
         .profile-container {
             background: rgba(0, 0, 0, 0.8);
             padding: 30px;
@@ -58,11 +87,13 @@
         }
         .icons {
             margin-top: 15px;
+            display: flex;
+            gap: 10px;
         }
-        .icons a {
-            display: inline-block;
+        .icons a img {
+            width: 20px;
+            height: 20px;
             transition: transform 0.3s ease, opacity 0.3s ease;
-            animation: glow 2s infinite alternate;
         }
         .icons a:hover {
             transform: scale(1.3) rotate(5deg);
@@ -75,6 +106,19 @@
         }
     </style>
     <script>
+        let audio = new Audio('chill-music.mp3');
+        let isPlaying = false;
+        function toggleMusic() {
+            if (isPlaying) {
+                audio.pause();
+            } else {
+                audio.play();
+            }
+            isPlaying = !isPlaying;
+        }
+        function setVolume(volume) {
+            audio.volume = volume;
+        }
         function animateText(element, text, speed) {
             let i = 0;
             function type() {
@@ -93,6 +137,10 @@
     </script>
 </head>
 <body>
+<div class="music-controls">
+    <button class="music-toggle" onclick="toggleMusic()">Music On/Off</button>
+    <input type="range" class="volume-slider" min="0" max="1" step="0.01" onchange="setVolume(this.value)" value="1">
+</div>
 <div class="profile-container">
     <img src="profile.png" alt="Profile Picture" class="profile-pic">
     <div id="username" class="username"></div>
@@ -107,3 +155,5 @@
 </div>
 </body>
 </html>
+
+
