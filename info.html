@@ -191,18 +191,17 @@
     }
   </style>
 
-  <script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
     let audio = new Audio('chill-music.mp3');
     let isPlaying = false;
     const bgVideo = document.getElementById('bg-video');
 
-    // This part handles errors if the video can't load.
-    // It will show an alert and log an error to your browser's console (F12).
     bgVideo.addEventListener('error', (e) => {
       console.error('Error loading background video:', e);
       bgVideo.style.display = 'none';
       document.body.style.background = 'black';
-      alert("Uh oh! The background video couldn't load. This usually means the 'background.mp4' file isn't in the 'videos' folder, or its name isn't exactly 'background.mp4', or the video file itself has a problem. Check your GitHub repository's file structure and the console for more details!");
+      alert("Uh oh! The background video couldn't load. Make sure it's located at 'videos/background.mp4' and the file is valid.");
     });
 
     function toggleMusic() {
@@ -232,63 +231,60 @@
 
     function getReadableStatus(status) {
       switch (status) {
-        case "online": return {text: "Online", className: "online"};
-        case "idle": return {text: "Idle", className: "idle"};
-        case "dnd": return {text: "Do Not Disturb", className: "dnd"};
-        case "offline": return {text: "Offline", className: "offline"};
-        default: return {text: "Unknown", className: "offline"};
+        case "online": return { text: "Online", className: "online" };
+        case "idle": return { text: "Idle", className: "idle" };
+        case "dnd": return { text: "Do Not Disturb", className: "dnd" };
+        case "offline": return { text: "Offline", className: "offline" };
+        default: return { text: "Unknown", className: "offline" };
       }
     }
 
     async function fetchDiscordStatus() {
-      const userId = "726790429055385620"; // Your Discord user ID
+      const userId = "726790429055385620";
       try {
-        const res = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
+        const res = await fetch(https://api.lanyard.rest/v1/users/${userId});
         const data = await res.json();
 
         if (!data.success) {
-          return { status: {text:"Status not available", className:"offline"}, playing: "" };
+          return { status: { text: "Status not available", className: "offline" }, playing: "" };
         }
 
         const discordData = data.data;
         const statusInfo = getReadableStatus(discordData.discord_status);
 
-        // Find playing activity (type 0)
-        const playingActivity = discordData.activities.find(activity => activity.type === 0);
-        // Find custom status (type 4)
-        const customStatus = discordData.activities.find(activity => activity.type === 4);
+        const playingActivity = discordData.activities.find(a => a.type === 0);
+        const customStatus = discordData.activities.find(a => a.type === 4);
 
         let playingText = "";
         if (playingActivity) {
-          playingText = `🎮 Playing ${playingActivity.name}`;
-        } else if (customStatus && customStatus.state) {
-          playingText = `💬 ${customStatus.state}`;
+          playingText = 🎮 Playing ${playingActivity.name};
+        } else if (customStatus?.state) {
+          playingText = 💬 ${customStatus.state};
         }
 
         return { status: statusInfo, playing: playingText };
-      } catch (error) {
-        console.error("Error fetching Discord status:", error);
-        return { status: {text:"Error fetching status", className:"offline"}, playing: "" };
+      } catch (err) {
+        console.error("Error fetching Discord status:", err);
+        return { status: { text: "Error fetching status", className: "offline" }, playing: "" };
       }
     }
 
-    async function enterSite() {
+    window.enterSite = async function () {
       document.querySelector(".click-to-enter").style.display = "none";
       document.querySelector(".main-content").style.display = "flex";
       audio.play().catch(e => console.error("Error playing audio after click:", e));
       isPlaying = true;
       typeText(document.getElementById("username"), "M819 Dekuu", 120, async function () {
         const statusData = await fetchDiscordStatus();
-
-        // Set status with colored icon
-        const discordStatusEl = document.getElementById("discord-status");
-        discordStatusEl.innerHTML = `<span class="status-icon ${statusData.status.className}"></span>${statusData.status.text}`;
-
-        // Type playing status text
+        document.getElementById("discord-status").innerHTML = <span class="status-icon ${statusData.status.className}"></span>${statusData.status.text};
         typeText(document.getElementById("game-status"), statusData.playing || "No current activity", 120);
       });
-    }
-  </script>
+    };
+
+    window.toggleMusic = toggleMusic;
+    window.setVolume = setVolume;
+  });
+</script>
 </head>
 
 <body>
