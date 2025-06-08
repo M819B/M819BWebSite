@@ -51,9 +51,9 @@
       margin-top: 15px;
     }
     .icons a img {
-      width: 30px;
-      height: 30px;
-      margin: 0 10px;
+      width: 24px;
+      height: 24px;
+      margin: 0 6px;
     }
     .music-player {
       position: fixed;
@@ -78,7 +78,15 @@
       font-size: 12px;
     }
     .music-player .song-title {
-      font-weight: bold;
+      display: none;
+    }
+    .play-btn {
+      background: url('play-button.png') no-repeat center center;
+      background-size: contain;
+      width: 24px;
+      height: 24px;
+      border: none;
+      cursor: pointer;
     }
     @keyframes pulse {
       0% { transform: scale(1); }
@@ -108,11 +116,10 @@
     </div>
   </div>
   <div class="music-player">
-    <span class="song-title">xadh</span>
     <span class="song-time" id="current-time">0:00</span>
     <input type="range" id="seekbar" value="0" min="0" max="100">
     <span class="song-time" id="duration">3:12</span>
-    <button onclick="toggleMusic()">▶️</button>
+    <button class="play-btn" onclick="toggleMusic()"></button>
   </div>
   <script>
     let audio = new Audio('chill-music.mp3');
