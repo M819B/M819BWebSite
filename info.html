@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title id="tab-title">M819 Dekuu</title>
-  <link rel="icon" type="image/png" href="dekuu-icon.gif" />
+  <link rel="icon" type="image/png" href="dekuu-icon.png" />
 
   <style>
     * {
@@ -26,12 +26,11 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      min-width: 100%;
+      min-height: 100%;
       object-fit: cover;
       z-index: -1;
       background: black;
-      display: block; /* Ensure video is visible */
     }
 
     .click-to-enter {
@@ -99,22 +98,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 10px;
-      font-size: 18px;
     }
-
-    .status-icon {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    /* Status colors */
-    .online { background-color: #43b581; } /* Green */
-    .idle { background-color: #faa61a; } /* Yellow */
-    .dnd { background-color: #f04747; } /* Red */
-    .offline { background-color: #747f8d; } /* Grey */
 
     .icons {
       display: flex;
@@ -222,11 +206,11 @@
 
     function getReadableStatus(status) {
       switch (status) {
-        case "online": return {text: "Online", className: "online"};
-        case "idle": return {text: "Idle", className: "idle"};
-        case "dnd": return {text: "Do Not Disturb", className: "dnd"};
-        case "offline": return {text: "Offline", className: "offline"};
-        default: return {text: "Unknown", className: "offline"};
+        case "online": return "Online";
+        case "idle": return "Idle";
+        case "dnd": return "Do Not Disturb";
+        case "offline": return "Offline";
+        default: return "Unknown";
       }
     }
 
@@ -237,11 +221,11 @@
         const data = await res.json();
 
         if (!data.success) {
-          return { status: {text:"Status not available", className:"offline"}, playing: "" };
+          return { status: "Status not available", playing: "" };
         }
 
         const discordData = data.data;
-        const statusInfo = getReadableStatus(discordData.discord_status);
+        const discordStatus = getReadableStatus(discordData.discord_status);
 
         // Find playing activity (type 0)
         const playingActivity = discordData.activities.find(activity => activity.type === 0);
@@ -255,9 +239,9 @@
           playingText = `💬 ${customStatus.state}`;
         }
 
-        return { status: statusInfo, playing: playingText };
+        return { status: discordStatus, playing: playingText };
       } catch (error) {
-        return { status: {text:"Error fetching status", className:"offline"}, playing: "" };
+        return { status: "Error fetching status", playing: "" };
       }
     }
 
@@ -268,12 +252,7 @@
       isPlaying = true;
       typeText(document.getElementById("username"), "M819 Dekuu", 120, async function () {
         const statusData = await fetchDiscordStatus();
-
-        // Set status with colored icon
-        const discordStatusEl = document.getElementById("discord-status");
-        discordStatusEl.innerHTML = `<span class="status-icon ${statusData.status.className}"></span>${statusData.status.text}`;
-
-        // Type playing status text
+        typeText(document.getElementById("discord-status"), statusData.status, 120);
         typeText(document.getElementById("game-status"), statusData.playing || "No current activity", 120);
       });
     }
@@ -283,7 +262,7 @@
 <body>
   <!-- Background Video -->
   <video id="bg-video" autoplay muted loop playsinline>
-    <source src="background.mp4" type="video/mp4" />
+    <source src="background.mp4" type="video/mp4">
     Your browser does not support HTML5 video.
   </video>
 
@@ -299,16 +278,16 @@
   <!-- Main Profile Content -->
   <div class="main-content">
     <div class="profile-container">
-      <img src="profile.png" class="profile-pic" alt="Profile" />
+      <img src="profile.png" class="profile-pic" alt="Profile">
       <div id="username" class="username"></div>
       <div id="discord-status" class="info-box">Loading status...</div>
       <div id="game-status" class="info-box">Loading activity...</div>
 
       <div class="icons">
-        <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube" /></a>
-        <a href="https://www.roblox.com/users/1936761233/profile" target="_blank"><img src="roblox.png" alt="Roblox" /></a>
-        <a href="https://discord.com/users/726790429055385620" target="_blank"><img src="discord.png" alt="Discord" /></a>
-        <a href="https://open.spotify.com/user/31dgudzlolnvguv6mabfdf4vzzbe" target="_blank"><img src="spotify.png" alt="Spotify" /></a>
+        <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube"></a>
+        <a href="https://www.roblox.com/users/1936761233/profile" target="_blank"><img src="roblox.png" alt="Roblox"></a>
+        <a href="https://discord.com/users/726790429055385620" target="_blank"><img src="discord.png" alt="Discord"></a>
+        <a href="https://open.spotify.com/user/31dgudzlolnvguv6mabfdf4vzzbe" target="_blank"><img src="spotify.png" alt="Spotify"></a>
       </div>
     </div>
   </div>
