@@ -197,28 +197,38 @@
       type();
     }
 
-    async function fetchDiscordStatus() {
-      const userId = "726790429055385620";
-      try {
-        const res = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
-        const data = await res.json();
-        const gameStatus = document.getElementById("game-status");
+async function fetchDiscordStatus() {
+  const userId = "726790429055385620"; // Your Discord user ID
+  const res = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
+  const data = await res.json();
 
-        if (data.success && data.data.activities.length > 0) {
-          const activity = data.data.activities.find(act => act.type === 0); // Type 0 = playing
-          if (activity) {
-            gameStatus.textContent = `🎮 Playing ${activity.name}`;
-          } else {
-            gameStatus.textContent = `🟢 Online`;
-          }
-        } else {
-          gameStatus.textContent = `🟢 Online`;
-        }
-      } catch (err) {
-        console.error("Error fetching Discord status:", err);
-        document.getElementById("game-status").textContent = "🔌 Offline or Error";
-      }
-    }
+  if (!data.success) {
+    return "Status not available";
+  }
+
+  const discordData = data.data;
+
+  if (discordData.discord_status === "offline") {
+    return "Offline";
+  }
+
+  // Try to find a "Playing" activity or custom status
+  const playingActivity = discordData.activities.find(activity => 
+    activity.type === 0 // type 0 = Playing
+  );
+
+  const customStatus = discordData.activities.find(activity => 
+    activity.type === 4 // type 4 = Custom Status
+  );
+
+  if (playingActivity) {
+    return `🎮 Playing ${playingActivity.name}`;
+  } else if (customStatus && customStatus.state) {
+    return `💬 ${customStatus.state}`;
+  } else {
+    return `Online - ${discordData.discord_status}`;
+  }
+}
 
     function enterSite() {
       document.querySelector(".click-to-enter").style.display = "none";
