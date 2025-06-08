@@ -199,10 +199,9 @@
     // Add error handling for video loading
     bgVideo.addEventListener('error', (e) => {
       console.error('Error loading background video:', e);
-      // If video fails, hide it and ensure background is black
-      bgVideo.style.display = 'none'; 
-      document.body.style.background = 'black'; 
-      alert("Error: Background video could not be loaded. Check file path or format in browser console."); // Add an alert to notify user
+      // You could display a fallback image or message here
+      bgVideo.style.display = 'none'; // Hide the broken video element
+      document.body.style.background = 'black'; // Ensure black background if video fails
     });
 
     function toggleMusic() {
@@ -275,7 +274,7 @@
     async function enterSite() {
       document.querySelector(".click-to-enter").style.display = "none";
       document.querySelector(".main-content").style.display = "flex";
-      audio.play().catch(e => console.error("Error playing audio after click:", e)); 
+      audio.play().catch(e => console.error("Error playing audio after click:", e)); // Catch potential play errors
       isPlaying = true;
       typeText(document.getElementById("username"), "M819 Dekuu", 120, async function () {
         const statusData = await fetchDiscordStatus();
