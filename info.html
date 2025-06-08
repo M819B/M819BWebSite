@@ -51,10 +51,10 @@
     }
 
     .main-content {
-      display: none;
+      display: none; /* Initially hidden */
       height: 100vh;
       width: 100vw;
-      display: flex;
+      display: flex; /* Overridden to flex in JS after click */
       justify-content: center;
       align-items: center;
       padding: 20px;
@@ -194,12 +194,21 @@
   <script>
     let audio = new Audio('chill-music.mp3');
     let isPlaying = false;
+    const bgVideo = document.getElementById('bg-video');
+
+    // Add error handling for video loading
+    bgVideo.addEventListener('error', (e) => {
+      console.error('Error loading background video:', e);
+      // You could display a fallback image or message here
+      bgVideo.style.display = 'none'; // Hide the broken video element
+      document.body.style.background = 'black'; // Ensure black background if video fails
+    });
 
     function toggleMusic() {
       if (isPlaying) {
         audio.pause();
       } else {
-        audio.play();
+        audio.play().catch(e => console.error("Error playing audio:", e)); // Catch potential play errors
       }
       isPlaying = !isPlaying;
     }
@@ -257,6 +266,7 @@
 
         return { status: statusInfo, playing: playingText };
       } catch (error) {
+        console.error("Error fetching Discord status:", error);
         return { status: {text:"Error fetching status", className:"offline"}, playing: "" };
       }
     }
@@ -264,7 +274,7 @@
     async function enterSite() {
       document.querySelector(".click-to-enter").style.display = "none";
       document.querySelector(".main-content").style.display = "flex";
-      audio.play();
+      audio.play().catch(e => console.error("Error playing audio after click:", e)); // Catch potential play errors
       isPlaying = true;
       typeText(document.getElementById("username"), "M819 Dekuu", 120, async function () {
         const statusData = await fetchDiscordStatus();
@@ -281,22 +291,18 @@
 </head>
 
 <body>
-  <!-- Background Video -->
   <video id="bg-video" autoplay muted loop playsinline>
     <source src="background.mp4" type="video/mp4" />
     Your browser does not support HTML5 video.
   </video>
 
-  <!-- Click to Enter -->
   <div class="click-to-enter" onclick="enterSite()">Click to Enter...</div>
 
-  <!-- Music Controls -->
   <div class="music-controls">
     <button class="music-toggle" onclick="toggleMusic()">Music On/Off</button>
     <input type="range" class="volume-slider" min="0" max="1" step="0.01" onchange="setVolume(this.value)" value="1">
   </div>
 
-  <!-- Main Profile Content -->
   <div class="main-content">
     <div class="profile-container">
       <img src="profile.png" class="profile-pic" alt="Profile" />
