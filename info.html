@@ -5,210 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title id="tab-title">M819 Dekuu</title>
   <link rel="icon" type="image/png" href="dekuu-icon.gif" />
-
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
-      height: 100%;
-      width: 100%;
-      font-family: 'Arial Black', sans-serif;
+      height: 100%; width: 100%; font-family: 'Arial Black', sans-serif;
       overflow: hidden;
     }
-
     video#bg-video {
-      position: fixed;
-      top: 0;
-      left: 0;
-      min-width: 100%;
-      min-height: 100%;
-      object-fit: cover;
-      z-index: -1;
+      position: fixed; top: 0; left: 0;
+      min-width: 100%; min-height: 100%;
+      object-fit: cover; z-index: -1;
     }
-
     .click-to-enter {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      display: flex; justify-content: center; align-items: center;
       background-color: rgba(0, 0, 0, 0.7);
-      color: #fff;
-      font-size: 2rem;
-      font-weight: bold;
-      z-index: 10;
-      text-align: center;
-      padding: 20px;
+      color: #fff; font-size: 2rem; font-weight: bold;
+      z-index: 10; text-align: center; padding: 20px;
       cursor: pointer;
     }
-
     .main-content {
-      display: none;
-      height: 100vh;
-      width: 100vw;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      display: none; height: 100vh; width: 100vw;
+      display: flex; justify-content: center; align-items: center;
       padding: 20px;
     }
-
     .profile-container {
-      background: rgba(0, 0, 0, 0.85);
-      padding: 30px;
+      background: rgba(0, 0, 0, 0.85); padding: 30px;
       border-radius: 20px;
       box-shadow: 0 0 25px rgba(255, 75, 92, 0.8);
-      max-width: 400px;
-      width: 100%;
-      text-align: center;
-      color: white;
-      z-index: 5;
+      max-width: 400px; width: 100%; text-align: center;
+      color: white; z-index: 5;
     }
-
     .profile-pic {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      border: 4px solid #ff4b5c;
-      animation: pulse 2s infinite;
+      width: 120px; height: 120px; border-radius: 50%;
+      border: 4px solid #ff4b5c; animation: pulse 2s infinite;
     }
-
     .username {
-      font-size: 28px;
-      margin-top: 15px;
+      font-size: 28px; margin-top: 15px;
       background: linear-gradient(90deg, #ff4b5c, #ff6b81);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 3px 3px 10px rgba(255, 75, 92, 0.8);
     }
-
-    .info-box {
-      background: #222;
-      padding: 12px;
-      border-radius: 10px;
-      margin-top: 12px;
-      font-weight: bold;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .status-circle {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      display: inline-block;
-    }
-
-    .status-online { background: #43b581; }
-    .status-idle { background: #faa61a; }
-    .status-dnd { background: #f04747; }
-    .status-offline { background: #747f8d; }
-
-    .icons {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-top: 20px;
-    }
-
-    .icons img {
-      width: 50px;
-      height: 50px;
-      transition: transform 0.3s ease;
-    }
-
-    .icons a:hover img {
-      transform: scale(1.2);
-      filter: drop-shadow(0 0 10px #ff4b5c);
-    }
-
-    .music-controls {
+    .music-player {
       position: absolute;
-      top: 20px;
-      left: 20px;
-      z-index: 15;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.75);
       display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .music-toggle {
-      background: #ff4b5c;
+      align-items: center;
+      padding: 10px 20px;
+      border-radius: 12px;
       color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      gap: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      font-family: Arial, sans-serif;
+    }
+    .music-player input[type="range"] {
+      width: 100px;
+    }
+    .music-player .song-time {
+      font-size: 12px;
+    }
+    .music-player .song-title {
       font-weight: bold;
     }
-
-    .volume-slider {
-      width: 150px;
-    }
-
     @keyframes pulse {
       0% { transform: scale(1); }
       50% { transform: scale(1.05); }
       100% { transform: scale(1); }
     }
-
-    @media screen and (max-width: 600px) {
-      .profile-container {
-        max-width: 90%;
-        padding: 20px;
-      }
-
-      .username {
-        font-size: 24px;
-      }
-
-      .click-to-enter {
-        font-size: 1.5rem;
-      }
-
-      .icons img {
-        width: 40px;
-        height: 40px;
-      }
-
-      .music-controls {
-        left: 10px;
-        top: 10px;
-      }
-    }
   </style>
 </head>
-
 <body>
-  <!-- Background Video -->
   <video id="bg-video" autoplay muted loop playsinline>
     <source src="background.mp4" type="video/mp4">
     Your browser does not support HTML5 video.
   </video>
-
-  <!-- Click to Enter -->
   <div class="click-to-enter" onclick="enterSite()">Click to Enter...</div>
-
-  <!-- Music Controls -->
-  <div class="music-controls">
-    <button class="music-toggle" onclick="toggleMusic()">Music On/Off</button>
-    <input type="range" class="volume-slider" min="0" max="1" step="0.01" onchange="setVolume(this.value)" value="1">
-  </div>
-
-  <!-- Main Profile Content -->
   <div class="main-content">
     <div class="profile-container">
       <img src="profile.png" class="profile-pic" alt="Profile">
       <div id="username" class="username"></div>
       <div id="status-box" class="info-box"><span class="status-circle status-offline"></span> Loading...</div>
       <div id="game-status" class="info-box"></div>
-
       <div class="icons">
         <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube"></a>
         <a href="https://www.roblox.com/users/1936761233/profile" target="_blank"><img src="roblox.png" alt="Roblox"></a>
@@ -217,10 +98,19 @@
       </div>
     </div>
   </div>
-
+  <div class="music-player">
+    <span class="song-title">xadh</span>
+    <span class="song-time" id="current-time">0:00</span>
+    <input type="range" id="seekbar" value="0" min="0" max="100">
+    <span class="song-time" id="duration">3:12</span>
+    <button onclick="toggleMusic()">▶️</button>
+  </div>
   <script>
     let audio = new Audio('chill-music.mp3');
     let isPlaying = false;
+    const seekbar = document.getElementById("seekbar");
+    const currentTimeEl = document.getElementById("current-time");
+    const durationEl = document.getElementById("duration");
 
     function toggleMusic() {
       if (isPlaying) {
@@ -231,8 +121,33 @@
       isPlaying = !isPlaying;
     }
 
-    function setVolume(v) {
-      audio.volume = v;
+    function updateSeekbar() {
+      const percent = (audio.currentTime / audio.duration) * 100;
+      seekbar.value = percent;
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+    }
+
+    function formatTime(seconds) {
+      const min = Math.floor(seconds / 60);
+      const sec = Math.floor(seconds % 60);
+      return `${min}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    seekbar.addEventListener("input", () => {
+      const time = (seekbar.value / 100) * audio.duration;
+      audio.currentTime = time;
+    });
+
+    audio.addEventListener("timeupdate", updateSeekbar);
+
+    function enterSite() {
+      document.querySelector(".click-to-enter").style.display = "none";
+      document.querySelector(".main-content").style.display = "flex";
+      audio.play();
+      isPlaying = true;
+      typeText(document.getElementById("username"), "M819 Dekuu", 120, function () {
+        fetchLanyard();
+      });
     }
 
     function typeText(el, text, speed, cb) {
@@ -247,40 +162,22 @@
       type();
     }
 
-    function enterSite() {
-      document.querySelector(".click-to-enter").style.display = "none";
-      document.querySelector(".main-content").style.display = "flex";
-      audio.play();
-      isPlaying = true;
-      typeText(document.getElementById("username"), "M819 Dekuu", 120, function () {
-        fetchLanyard();
-      });
-    }
-
     function fetchLanyard() {
-      const userId = "726790429055385620"; // Your Discord ID
+      const userId = "726790429055385620";
       fetch(`https://api.lanyard.rest/v1/users/${userId}`)
         .then(res => res.json())
         .then(data => {
           const discordStatus = data.data.discord_status;
-          const activity = data.data.activities.find(a => a.type === 0); // type 0 = playing
-
+          const activity = data.data.activities.find(a => a.type === 0);
           const statusMap = {
             online: { color: 'status-online', text: 'Online' },
             idle: { color: 'status-idle', text: 'Idle' },
             dnd: { color: 'status-dnd', text: 'Do Not Disturb' },
             offline: { color: 'status-offline', text: 'Offline' }
           };
-
           const status = statusMap[discordStatus] || statusMap.offline;
-          document.getElementById('status-box').innerHTML =
-            `<span class="status-circle ${status.color}"></span> ${status.text}`;
-
-          if (activity) {
-            document.getElementById("game-status").textContent = `🎮 ${activity.name}`;
-          } else {
-            document.getElementById("game-status").textContent = `🎮 Not playing anything`;
-          }
+          document.getElementById('status-box').innerHTML = `<span class="status-circle ${status.color}"></span> ${status.text}`;
+          document.getElementById("game-status").textContent = activity ? `🎮 ${activity.name}` : `🎮 Not playing anything`;
         })
         .catch(err => {
           document.getElementById('status-box').textContent = "⚠️ Error fetching status";
