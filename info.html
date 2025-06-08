@@ -4,16 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>@ d e k u u</title>
-  <link rel="icon" type="image/png" href="dekuu-icon.gif" />
+  <link rel="icon" type="image/png" href="dekuu-icon.png" />
 
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    body {
+    html, body {
+      height: 100%;
+      width: 100%;
       font-family: 'Arial Black', sans-serif;
       overflow: hidden;
-      color: white;
-      text-align: center;
     }
 
     video#bg-video {
@@ -28,60 +32,53 @@
 
     .click-to-enter {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.85);
+      top: 0; left: 0; right: 0; bottom: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 32px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      font-size: 2rem;
       font-weight: bold;
-      cursor: pointer;
       z-index: 10;
+      text-align: center;
+      padding: 20px;
+      cursor: pointer;
     }
 
     .main-content {
       display: none;
       height: 100vh;
       width: 100vw;
-      padding-top: 80px;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      justify-content: start;
+      padding: 20px;
     }
 
     .profile-container {
       background: rgba(0, 0, 0, 0.85);
-      padding: 40px;
-      border-radius: 30px;
-      box-shadow: 0 0 35px rgba(255, 75, 92, 0.8);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 90%;
-      max-width: 420px;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(255, 75, 92, 0.8);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      color: white;
+      z-index: 5;
     }
 
     .profile-pic {
-      width: 130px;
-      height: 130px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       border: 4px solid #ff4b5c;
       animation: pulse 2s infinite;
     }
 
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-
     .username {
-      font-size: 36px;
-      margin-top: 20px;
+      font-size: 28px;
+      margin-top: 15px;
       background: linear-gradient(90deg, #ff4b5c, #ff6b81);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -90,70 +87,83 @@
 
     .info-box {
       background: #222;
-      padding: 15px;
-      border-radius: 12px;
-      margin-top: 15px;
-      box-shadow: 0 0 20px rgba(255, 75, 92, 0.7);
-      width: 90%;
-      font-size: 18px;
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 12px;
       font-weight: bold;
     }
 
     .icons {
-      margin-top: 30px;
       display: flex;
-      gap: 30px;
       justify-content: center;
+      gap: 20px;
       flex-wrap: wrap;
+      margin-top: 20px;
     }
 
-    .icons a img {
-      width: 60px;
-      height: 60px;
+    .icons img {
+      width: 50px;
+      height: 50px;
       transition: transform 0.3s ease;
     }
 
     .icons a:hover img {
-      transform: scale(1.3);
-      filter: drop-shadow(0 0 20px #ff4b5c);
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 10px #ff4b5c);
     }
 
     .music-controls {
       position: absolute;
       top: 20px;
       left: 20px;
+      z-index: 15;
       display: flex;
       flex-direction: column;
-      z-index: 15;
+      gap: 10px;
     }
 
     .music-toggle {
       background: #ff4b5c;
       color: white;
+      padding: 10px;
       border: none;
-      padding: 12px;
-      border-radius: 12px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 16px;
-      margin-bottom: 10px;
+      font-weight: bold;
     }
 
     .volume-slider {
-      width: 160px;
+      width: 150px;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
     }
 
     @media screen and (max-width: 600px) {
-      .username {
-        font-size: 26px;
+      .profile-container {
+        max-width: 90%;
+        padding: 20px;
       }
 
-      .music-controls {
-        top: 10px;
-        left: 10px;
+      .username {
+        font-size: 24px;
       }
 
       .click-to-enter {
-        font-size: 24px;
+        font-size: 1.5rem;
+      }
+
+      .icons img {
+        width: 40px;
+        height: 40px;
+      }
+
+      .music-controls {
+        left: 10px;
+        top: 10px;
       }
     }
   </style>
@@ -172,21 +182,18 @@
       isPlaying = !isPlaying;
     }
 
-    function setVolume(vol) {
-      audio.volume = vol;
+    function setVolume(v) {
+      audio.volume = v;
     }
 
-    function typeText(element, text, speed, callback) {
+    function typeText(el, text, speed, cb) {
       let i = 0;
-      element.innerHTML = "";
+      el.innerHTML = "";
       function type() {
         if (i < text.length) {
-          element.innerHTML += text.charAt(i);
-          i++;
+          el.innerHTML += text.charAt(i++);
           setTimeout(type, speed);
-        } else {
-          if (callback) callback();
-        }
+        } else if (cb) cb();
       }
       type();
     }
@@ -194,34 +201,39 @@
     function enterSite() {
       document.querySelector(".click-to-enter").style.display = "none";
       document.querySelector(".main-content").style.display = "flex";
-      typeText(document.getElementById("username"), "M819 Dekuu", 150, function () {
-        typeText(document.getElementById("game-status"), "🎮 Playing Minecraft", 150);
-      });
       audio.play();
       isPlaying = true;
+      typeText(document.getElementById("username"), "M819 Dekuu", 120, function () {
+        typeText(document.getElementById("game-status"), "🎮 Playing Minecraft", 120);
+      });
     }
   </script>
 </head>
 
 <body>
+  <!-- Background Video -->
   <video id="bg-video" autoplay muted loop playsinline>
-    <source src="background.mp4" type="video/mp4" />
+    <source src="background.mp4" type="video/mp4">
     Your browser does not support HTML5 video.
   </video>
 
+  <!-- Click to Enter -->
   <div class="click-to-enter" onclick="enterSite()">Click to Enter...</div>
 
+  <!-- Music Controls -->
   <div class="music-controls">
     <button class="music-toggle" onclick="toggleMusic()">Music On/Off</button>
-    <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="1" onchange="setVolume(this.value)" />
+    <input type="range" class="volume-slider" min="0" max="1" step="0.01" onchange="setVolume(this.value)" value="1">
   </div>
 
+  <!-- Main Profile Content -->
   <div class="main-content">
     <div class="profile-container">
-      <img src="profile.png" class="profile-pic" alt="Profile Picture" />
+      <img src="profile.png" class="profile-pic" alt="Profile">
       <div id="username" class="username"></div>
       <div class="info-box">Playing Minecraft all day.</div>
       <div id="game-status" class="info-box"></div>
+
       <div class="icons">
         <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube"></a>
         <a href="https://www.roblox.com/users/1936761233/profile" target="_blank"><img src="roblox.png" alt="Roblox"></a>
