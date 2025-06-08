@@ -51,10 +51,10 @@
     }
 
     .main-content {
-      display: none; /* Initially hidden */
+      display: none;
       height: 100vh;
       width: 100vw;
-      display: flex; /* Overridden to flex in JS after click */
+      display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
@@ -191,24 +191,15 @@
     }
   </style>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
+  <script>
     let audio = new Audio('chill-music.mp3');
     let isPlaying = false;
-    const bgVideo = document.getElementById('bg-video');
-
-    bgVideo.addEventListener('error', (e) => {
-      console.error('Error loading background video:', e);
-      bgVideo.style.display = 'none';
-      document.body.style.background = 'black';
-      alert("Uh oh! The background video couldn't load. Make sure it's located at 'videos/background.mp4' and the file is valid.");
-    });
 
     function toggleMusic() {
       if (isPlaying) {
         audio.pause();
       } else {
-        audio.play().catch(e => console.error("Error playing audio:", e));
+        audio.play();
       }
       isPlaying = !isPlaying;
     }
@@ -231,75 +222,81 @@
 
     function getReadableStatus(status) {
       switch (status) {
-        case "online": return { text: "Online", className: "online" };
-        case "idle": return { text: "Idle", className: "idle" };
-        case "dnd": return { text: "Do Not Disturb", className: "dnd" };
-        case "offline": return { text: "Offline", className: "offline" };
-        default: return { text: "Unknown", className: "offline" };
+        case "online": return {text: "Online", className: "online"};
+        case "idle": return {text: "Idle", className: "idle"};
+        case "dnd": return {text: "Do Not Disturb", className: "dnd"};
+        case "offline": return {text: "Offline", className: "offline"};
+        default: return {text: "Unknown", className: "offline"};
       }
     }
 
     async function fetchDiscordStatus() {
-      const userId = "726790429055385620";
+      const userId = "726790429055385620"; // Your Discord user ID
       try {
-        const res = await fetch(https://api.lanyard.rest/v1/users/${userId});
+        const res = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
         const data = await res.json();
 
         if (!data.success) {
-          return { status: { text: "Status not available", className: "offline" }, playing: "" };
+          return { status: {text:"Status not available", className:"offline"}, playing: "" };
         }
 
         const discordData = data.data;
         const statusInfo = getReadableStatus(discordData.discord_status);
 
-        const playingActivity = discordData.activities.find(a => a.type === 0);
-        const customStatus = discordData.activities.find(a => a.type === 4);
+        // Find playing activity (type 0)
+        const playingActivity = discordData.activities.find(activity => activity.type === 0);
+        // Find custom status (type 4)
+        const customStatus = discordData.activities.find(activity => activity.type === 4);
 
         let playingText = "";
         if (playingActivity) {
-          playingText = 🎮 Playing ${playingActivity.name};
-        } else if (customStatus?.state) {
-          playingText = 💬 ${customStatus.state};
+          playingText = `🎮 Playing ${playingActivity.name}`;
+        } else if (customStatus && customStatus.state) {
+          playingText = `💬 ${customStatus.state}`;
         }
 
         return { status: statusInfo, playing: playingText };
-      } catch (err) {
-        console.error("Error fetching Discord status:", err);
-        return { status: { text: "Error fetching status", className: "offline" }, playing: "" };
+      } catch (error) {
+        return { status: {text:"Error fetching status", className:"offline"}, playing: "" };
       }
     }
 
-    window.enterSite = async function () {
+    async function enterSite() {
       document.querySelector(".click-to-enter").style.display = "none";
       document.querySelector(".main-content").style.display = "flex";
-      audio.play().catch(e => console.error("Error playing audio after click:", e));
+      audio.play();
       isPlaying = true;
       typeText(document.getElementById("username"), "M819 Dekuu", 120, async function () {
         const statusData = await fetchDiscordStatus();
-        document.getElementById("discord-status").innerHTML = <span class="status-icon ${statusData.status.className}"></span>${statusData.status.text};
+
+        // Set status with colored icon
+        const discordStatusEl = document.getElementById("discord-status");
+        discordStatusEl.innerHTML = `<span class="status-icon ${statusData.status.className}"></span>${statusData.status.text}`;
+
+        // Type playing status text
         typeText(document.getElementById("game-status"), statusData.playing || "No current activity", 120);
       });
-    };
-
-    window.toggleMusic = toggleMusic;
-    window.setVolume = setVolume;
-  });
-</script>
+    }
+  </script>
 </head>
 
 <body>
+  <!-- Background Video -->
   <video id="bg-video" autoplay muted loop playsinline>
-    <source src="videos/background.mp4" type="video/mp4" />
+    <source src="background.mp4" type="video/mp4" />
     Your browser does not support HTML5 video.
   </video>
 
+  <!-- Click to Enter -->
   <div class="click-to-enter" onclick="enterSite()">Click to Enter...</div>
 
+  <!-- Music Controls -->
   <div class="music-controls">
     <button class="music-toggle" onclick="toggleMusic()">Music On/Off</button>
     <input type="range" class="volume-slider" min="0" max="1" step="0.01" onchange="setVolume(this.value)" value="1">
   </div>
 
+  <!-- Main Profile Content -->
   <div class="main-content">
     <div class="profile-container">
       <img src="profile.png" class="profile-pic" alt="Profile" />
