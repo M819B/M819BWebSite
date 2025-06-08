@@ -3,119 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title id="tab-title">M819 Dekuu</title>
-  <link rel="icon" type="image/png" href="dekuu-icon.png">
+  <title>M819 Dekuu</title>
+  <link rel="icon" type="image/png" href="dekuu-icon.png" />
 
   <style>
-    /* --- Base Layout --- */
+    * {
+      box-sizing: border-box;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
-      font-family: 'Arial Black', sans-serif;
-      color: white;
       height: 100%;
       overflow: hidden;
+      font-family: 'Arial Black', sans-serif;
     }
 
     #bg-video {
       position: fixed;
       top: 0;
       left: 0;
-      min-width: 100vw;
-      min-height: 100vh;
+      width: 100vw;
+      height: 100vh;
       object-fit: cover;
+      transform: translateY(-5%);
       z-index: -1;
+      pointer-events: none;
     }
 
     .click-to-enter {
-      position: fixed;
-      inset: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background-color: rgba(0, 0, 0, 0.8);
-      font-size: 5vw;
+      background-color: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      font-size: 24px;
       font-weight: bold;
-      animation: moveBackground 2s ease-in-out infinite;
       z-index: 10;
-      text-align: center;
-    }
-
-    .click-to-enter:hover {
       cursor: pointer;
-      transform: scale(1.05);
-    }
-
-    @keyframes moveBackground {
-      0% { background-position: 0 0; }
-      100% { background-position: 100% 100%; }
     }
 
     .main-content {
       display: none;
       height: 100%;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       padding: 20px;
-      box-sizing: border-box;
-    }
-
-    .music-controls {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      z-index: 15;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .music-toggle {
-      background: #ff4b5c;
-      color: white;
-      font-weight: bold;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 16px;
-      box-shadow: 0 0 10px rgba(255, 75, 92, 0.8);
-    }
-
-    .music-toggle:hover {
-      transform: scale(1.05);
-    }
-
-    .volume-slider {
-      width: 150px;
-      height: 10px;
-      -webkit-appearance: none;
-      appearance: none;
-      background: linear-gradient(90deg, #ff4b5c, #ff6b81);
-      outline: none;
-      border-radius: 5px;
-      cursor: pointer;
     }
 
     .profile-container {
       background: rgba(0, 0, 0, 0.85);
       padding: 30px;
       border-radius: 25px;
-      box-shadow: 0 0 25px rgba(255, 75, 92, 0.8);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      max-width: 90vw;
-      width: 420px;
-      animation: slideIn 1s ease-in-out;
-    }
-
-    @keyframes slideIn {
-      0% { transform: translateY(-100vh); }
-      100% { transform: translateY(0); }
+      box-shadow: 0 0 30px rgba(255, 75, 92, 0.8);
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+      z-index: 5;
     }
 
     .profile-pic {
@@ -124,121 +76,157 @@
       border-radius: 50%;
       border: 4px solid #ff4b5c;
       animation: pulse 2s infinite;
+      margin-bottom: 20px;
     }
 
     .username {
-      font-size: 28px;
+      font-size: 30px;
       font-weight: bold;
-      margin-top: 10px;
       background: linear-gradient(90deg, #ff4b5c, #ff6b81);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 2px 2px 6px rgba(255, 75, 92, 0.7);
+      text-shadow: 2px 2px 10px rgba(255, 75, 92, 0.8);
     }
 
     .info-box {
       background: #222;
+      color: #fff;
       padding: 12px;
       border-radius: 10px;
       margin-top: 12px;
-      box-shadow: 0 0 10px rgba(255, 75, 92, 0.5);
-      width: 90%;
-      font-size: 16px;
       font-weight: bold;
+      font-size: 16px;
     }
 
     .icons {
-      margin-top: 25px;
+      margin-top: 20px;
       display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
       justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
     }
 
     .icons a img {
       width: 50px;
       height: 50px;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, opacity 0.3s ease;
     }
 
-    .icons a:hover img {
-      transform: scale(1.3);
-      filter: drop-shadow(0 0 10px #ff4b5c);
+    .icons a:hover {
+      transform: scale(1.2);
+      opacity: 0.9;
+    }
+
+    .music-controls {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .music-toggle {
+      background: #ff4b5c;
+      color: white;
+      font-weight: bold;
+      border: none;
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    .volume-slider {
+      width: 150px;
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(1); }
+      0% { transform: scale(1); }
       50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
     }
 
-    /* --- Mobile Styles --- */
-    @media screen and (max-width: 600px) {
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
       .profile-container {
-        width: 95vw;
+        width: 100%;
+        max-width: 95%;
         padding: 20px;
       }
 
+      .icons a img {
+        width: 40px;
+        height: 40px;
+      }
+
       .username {
-        font-size: 6vw;
+        font-size: 24px;
       }
 
       .info-box {
         font-size: 14px;
       }
-
-      .music-controls {
-        top: 10px;
-        left: 10px;
-      }
-
-      .music-toggle {
-        padding: 8px 12px;
-        font-size: 14px;
-      }
-
-      .volume-slider {
-        width: 120px;
-      }
-
-      .icons a img {
-        width: 45px;
-        height: 45px;
-      }
-
-      .click-to-enter {
-        font-size: 7vw;
-        padding: 20px;
-      }
     }
   </style>
+</head>
+
+<body>
+  <!-- Video background -->
+  <video id="bg-video" autoplay muted loop>
+    <source src="https://files.catbox.moe/4y9gij.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+
+  <!-- Click to enter -->
+  <div class="click-to-enter" onclick="enterSite()">
+    Click to Enter...
+  </div>
+
+  <!-- Main content -->
+  <div class="main-content">
+    <div class="music-controls">
+      <button class="music-toggle" onclick="toggleMusic()">Music On/Off</button>
+      <input type="range" class="volume-slider" min="0" max="1" step="0.01" onchange="setVolume(this.value)" value="1">
+    </div>
+
+    <div class="profile-container">
+      <img src="profile.png" alt="Profile Picture" class="profile-pic">
+      <div id="username" class="username">M819 Dekuu</div>
+      <div class="info-box">Playing Minecraft all day.</div>
+      <div id="game-status" class="info-box">🎮 Playing Minecraft</div>
+
+      <div class="icons">
+        <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube"></a>
+        <a href="https://www.roblox.com/users/1936761233/profile" target="_blank"><img src="roblox.png" alt="Roblox"></a>
+        <a href="https://discord.com/users/726790429055385620" target="_blank"><img src="discord.png" alt="Discord"></a>
+        <a href="https://open.spotify.com/user/31dgudzlolnvguv6mabfdf4vzzbe" target="_blank"><img src="spotify.png" alt="Spotify"></a>
+      </div>
+    </div>
+  </div>
+
+  <audio id="bg-music" src="chill-music.mp3" loop></audio>
 
   <script>
-    let audio = new Audio('chill-music.mp3');
-    audio.loop = true;
+    const audio = document.getElementById('bg-music');
     let isPlaying = false;
 
     function toggleMusic() {
-      isPlaying ? audio.pause() : audio.play();
+      if (isPlaying) {
+        audio.pause();
+      } else {
+        audio.play();
+      }
       isPlaying = !isPlaying;
     }
 
-    function setVolume(volume) {
-      audio.volume = volume;
-    }
-
-    function typeText(element, text, speed, callback) {
-      let i = 0;
-      element.innerHTML = "";
-      function type() {
-        if (i < text.length) {
-          element.innerHTML += text.charAt(i);
-          i++;
-          setTimeout(type, speed);
-        } else {
-          if (callback) callback();
-        }
-      }
-      type();
+    function setVolume(vol) {
+      audio.volume = vol;
     }
 
     function enterSite() {
@@ -246,42 +234,7 @@
       document.querySelector(".main-content").style.display = "flex";
       audio.play();
       isPlaying = true;
-      typeText(document.getElementById("username"), "M819 Dekuu", 150, function () {
-        typeText(document.getElementById("game-status"), "🎮 Playing Minecraft", 150);
-      });
     }
   </script>
-</head>
-<body>
-  <!-- Background Video -->
-  <video autoplay muted loop playsinline id="bg-video">
-    <source src="background.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-
-  <!-- Enter Screen -->
-  <div class="click-to-enter" onclick="enterSite()">Click to Enter...</div>
-
-  <!-- Main Content -->
-  <div class="main-content">
-    <div class="music-controls">
-      <button class="music-toggle" onclick="toggleMusic()">Music On/Off</button>
-      <input type="range" class="volume-slider" min="0" max="1" step="0.01" onchange="setVolume(this.value)" value="1" />
-    </div>
-
-    <div class="profile-container">
-      <img src="profile.png" class="profile-pic" alt="Profile Picture" />
-      <div id="username" class="username"></div>
-      <div class="info-box">Playing Minecraft all day.</div>
-      <div id="game-status" class="info-box"></div>
-
-      <div class="icons">
-        <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube" /></a>
-        <a href="https://www.roblox.com/users/1936761233/profile" target="_blank"><img src="roblox.png" alt="Roblox" /></a>
-        <a href="https://discord.com/users/726790429055385620" target="_blank"><img src="discord.png" alt="Discord" /></a>
-        <a href="https://open.spotify.com/user/31dgudzlolnvguv6mabfdf4vzzbe" target="_blank"><img src="spotify.png" alt="Spotify" /></a>
-      </div>
-    </div>
-  </div>
 </body>
 </html>
