@@ -94,6 +94,10 @@
       border-radius: 10px;
       margin-top: 12px;
       font-weight: bold;
+      min-height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .icons {
@@ -217,7 +221,7 @@
         const data = await res.json();
 
         if (!data.success) {
-          return "Status not available";
+          return { status: "Status not available", playing: "" };
         }
 
         const discordData = data.data;
@@ -228,15 +232,16 @@
         // Find custom status (type 4)
         const customStatus = discordData.activities.find(activity => activity.type === 4);
 
+        let playingText = "";
         if (playingActivity) {
-          return `🎮 Playing ${playingActivity.name} (${discordStatus})`;
+          playingText = `🎮 Playing ${playingActivity.name}`;
         } else if (customStatus && customStatus.state) {
-          return `💬 ${customStatus.state} (${discordStatus})`;
-        } else {
-          return `Status: ${discordStatus}`;
+          playingText = `💬 ${customStatus.state}`;
         }
+
+        return { status: discordStatus, playing: playingText };
       } catch (error) {
-        return "Error fetching status";
+        return { status: "Error fetching status", playing: "" };
       }
     }
 
@@ -246,8 +251,9 @@
       audio.play();
       isPlaying = true;
       typeText(document.getElementById("username"), "M819 Dekuu", 120, async function () {
-        const status = await fetchDiscordStatus();
-        typeText(document.getElementById("game-status"), status, 120);
+        const statusData = await fetchDiscordStatus();
+        typeText(document.getElementById("discord-status"), statusData.status, 120);
+        typeText(document.getElementById("game-status"), statusData.playing || "No current activity", 120);
       });
     }
   </script>
@@ -274,7 +280,8 @@
     <div class="profile-container">
       <img src="profile.png" class="profile-pic" alt="Profile">
       <div id="username" class="username"></div>
-      <div class="info-box" id="game-status">Loading status...</div>
+      <div id="discord-status" class="info-box">Loading status...</div>
+      <div id="game-status" class="info-box">Loading activity...</div>
 
       <div class="icons">
         <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube"></a>
