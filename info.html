@@ -30,6 +30,7 @@
       min-height: 100%;
       object-fit: cover;
       z-index: -1;
+      background: black;
     }
 
     .click-to-enter {
@@ -199,8 +200,18 @@
       type();
     }
 
+    function getReadableStatus(status) {
+      switch (status) {
+        case "online": return "Online";
+        case "idle": return "Idle";
+        case "dnd": return "Do Not Disturb";
+        case "offline": return "Offline";
+        default: return "Unknown";
+      }
+    }
+
     async function fetchDiscordStatus() {
-      const userId = "726790429055385620"; // Replace with your Discord user ID
+      const userId = "726790429055385620"; // Your Discord user ID
       try {
         const res = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
         const data = await res.json();
@@ -210,21 +221,19 @@
         }
 
         const discordData = data.data;
+        const discordStatus = getReadableStatus(discordData.discord_status);
 
-        if (discordData.discord_status === "offline") {
-          return "Offline";
-        }
-
-        // Look for Playing activity (type 0) or Custom Status (type 4)
+        // Find playing activity (type 0)
         const playingActivity = discordData.activities.find(activity => activity.type === 0);
+        // Find custom status (type 4)
         const customStatus = discordData.activities.find(activity => activity.type === 4);
 
         if (playingActivity) {
-          return `🎮 Playing ${playingActivity.name}`;
+          return `🎮 Playing ${playingActivity.name} (${discordStatus})`;
         } else if (customStatus && customStatus.state) {
-          return `💬 ${customStatus.state}`;
+          return `💬 ${customStatus.state} (${discordStatus})`;
         } else {
-          return `Online - ${discordData.discord_status}`;
+          return `Status: ${discordStatus}`;
         }
       } catch (error) {
         return "Error fetching status";
@@ -269,6 +278,7 @@
 
       <div class="icons">
         <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube"></a>
+        <a href="https://www.roblox.com/users/1936761233/profile" target="_blank"><img src="roblox.png" alt="Roblox"></a>
         <a href="https://discord.com/users/726790429055385620" target="_blank"><img src="discord.png" alt="Discord"></a>
         <a href="https://open.spotify.com/user/31dgudzlolnvguv6mabfdf4vzzbe" target="_blank"><img src="spotify.png" alt="Spotify"></a>
       </div>
