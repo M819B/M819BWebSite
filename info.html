@@ -21,10 +21,10 @@
 
     #bg-video {
       position: fixed;
-      top: -10vh; /* moved video higher */
+      top: 0;
       left: 0;
       width: 100vw;
-      height: 120vh;
+      height: 100vh;
       object-fit: cover;
       z-index: -1;
       pointer-events: none;
@@ -42,7 +42,7 @@
       align-items: center;
       background-color: rgba(0, 0, 0, 0.85);
       color: #fff;
-      font-size: 18px; /* smaller size */
+      font-size: 18px;
       font-weight: bold;
       z-index: 10;
       cursor: pointer;
@@ -183,7 +183,7 @@
 
 <body>
   <!-- Video background -->
-  <video id="bg-video" autoplay muted loop>
+  <video id="bg-video" autoplay muted loop playsinline>
     <source src="https://files.catbox.moe/4y9gij.mp4" type="video/mp4">
     Your browser does not support HTML5 video.
   </video>
