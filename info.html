@@ -91,7 +91,23 @@
       border-radius: 10px;
       margin-top: 12px;
       font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
     }
+
+    .status-circle {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .status-online { background: #43b581; }
+    .status-idle { background: #faa61a; }
+    .status-dnd { background: #f04747; }
+    .status-offline { background: #747f8d; }
 
     .icons {
       display: flex;
@@ -167,6 +183,40 @@
       }
     }
   </style>
+</head>
+
+<body>
+  <!-- Background Video -->
+  <video id="bg-video" autoplay muted loop playsinline>
+    <source src="background.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+
+  <!-- Click to Enter -->
+  <div class="click-to-enter" onclick="enterSite()">Click to Enter...</div>
+
+  <!-- Music Controls -->
+  <div class="music-controls">
+    <button class="music-toggle" onclick="toggleMusic()">Music On/Off</button>
+    <input type="range" class="volume-slider" min="0" max="1" step="0.01" onchange="setVolume(this.value)" value="1">
+  </div>
+
+  <!-- Main Profile Content -->
+  <div class="main-content">
+    <div class="profile-container">
+      <img src="profile.png" class="profile-pic" alt="Profile">
+      <div id="username" class="username"></div>
+      <div id="status-box" class="info-box"><span class="status-circle status-offline"></span> Loading...</div>
+      <div id="game-status" class="info-box"></div>
+
+      <div class="icons">
+        <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube"></a>
+        <a href="https://www.roblox.com/users/1936761233/profile" target="_blank"><img src="roblox.png" alt="Roblox"></a>
+        <a href="https://discord.com/users/726790429055385620" target="_blank"><img src="discord.png" alt="Discord"></a>
+        <a href="https://open.spotify.com/user/31dgudzlolnvguv6mabfdf4vzzbe" target="_blank"><img src="spotify.png" alt="Spotify"></a>
+      </div>
+    </div>
+  </div>
 
   <script>
     let audio = new Audio('chill-music.mp3');
@@ -203,43 +253,40 @@
       audio.play();
       isPlaying = true;
       typeText(document.getElementById("username"), "M819 Dekuu", 120, function () {
-        typeText(document.getElementById("game-status"), "🎮 Playing Minecraft", 120);
+        fetchLanyard();
       });
     }
+
+    function fetchLanyard() {
+      const userId = "726790429055385620"; // Your Discord ID
+      fetch(`https://api.lanyard.rest/v1/users/${userId}`)
+        .then(res => res.json())
+        .then(data => {
+          const discordStatus = data.data.discord_status;
+          const activity = data.data.activities.find(a => a.type === 0); // type 0 = playing
+
+          const statusMap = {
+            online: { color: 'status-online', text: 'Online' },
+            idle: { color: 'status-idle', text: 'Idle' },
+            dnd: { color: 'status-dnd', text: 'Do Not Disturb' },
+            offline: { color: 'status-offline', text: 'Offline' }
+          };
+
+          const status = statusMap[discordStatus] || statusMap.offline;
+          document.getElementById('status-box').innerHTML =
+            `<span class="status-circle ${status.color}"></span> ${status.text}`;
+
+          if (activity) {
+            document.getElementById("game-status").textContent = `🎮 ${activity.name}`;
+          } else {
+            document.getElementById("game-status").textContent = `🎮 Not playing anything`;
+          }
+        })
+        .catch(err => {
+          document.getElementById('status-box').textContent = "⚠️ Error fetching status";
+          console.error(err);
+        });
+    }
   </script>
-</head>
-
-<body>
-  <!-- Background Video -->
-  <video id="bg-video" autoplay muted loop playsinline>
-    <source src="background.mp4" type="video/mp4">
-    Your browser does not support HTML5 video.
-  </video>
-
-  <!-- Click to Enter -->
-  <div class="click-to-enter" onclick="enterSite()">Click to Enter...</div>
-
-  <!-- Music Controls -->
-  <div class="music-controls">
-    <button class="music-toggle" onclick="toggleMusic()">Music On/Off</button>
-    <input type="range" class="volume-slider" min="0" max="1" step="0.01" onchange="setVolume(this.value)" value="1">
-  </div>
-
-  <!-- Main Profile Content -->
-  <div class="main-content">
-    <div class="profile-container">
-      <img src="profile.png" class="profile-pic" alt="Profile">
-      <div id="username" class="username"></div>
-      <div class="info-box">Playing Minecraft all day.</div>
-      <div id="game-status" class="info-box"></div>
-
-      <div class="icons">
-        <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube"></a>
-        <a href="https://www.roblox.com/users/1936761233/profile" target="_blank"><img src="roblox.png" alt="Roblox"></a>
-        <a href="https://discord.com/users/726790429055385620" target="_blank"><img src="discord.png" alt="Discord"></a>
-        <a href="https://open.spotify.com/user/31dgudzlolnvguv6mabfdf4vzzbe" target="_blank"><img src="spotify.png" alt="Spotify"></a>
-      </div>
-    </div>
-  </div>
 </body>
 </html>
