@@ -94,10 +94,6 @@
       border-radius: 10px;
       margin-top: 12px;
       font-weight: bold;
-      min-height: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     .icons {
@@ -206,11 +202,11 @@
 
     function getReadableStatus(status) {
       switch (status) {
-        case "online": return "Online";
-        case "idle": return "Idle";
-        case "dnd": return "Do Not Disturb";
-        case "offline": return "Offline";
-        default: return "Unknown";
+        case "online": return {text: "Online", className: "online"};
+        case "idle": return {text: "Idle", className: "idle"};
+        case "dnd": return {text: "Do Not Disturb", className: "dnd"};
+        case "offline": return {text: "Offline", className: "offline"};
+        default: return {text: "Unknown", className: "offline"};
       }
     }
 
@@ -221,11 +217,11 @@
         const data = await res.json();
 
         if (!data.success) {
-          return { status: "Status not available", playing: "" };
+          return { status: {text:"Status not available", className:"offline"}, playing: "" };
         }
 
         const discordData = data.data;
-        const discordStatus = getReadableStatus(discordData.discord_status);
+        const statusInfo = getReadableStatus(discordData.discord_status);
 
         // Find playing activity (type 0)
         const playingActivity = discordData.activities.find(activity => activity.type === 0);
@@ -239,22 +235,10 @@
           playingText = `💬 ${customStatus.state}`;
         }
 
-        return { status: discordStatus, playing: playingText };
+        return { status: statusInfo, playing: playingText };
       } catch (error) {
-        return { status: "Error fetching status", playing: "" };
+        return { status: {text:"Error fetching status", className:"offline"}, playing: "" };
       }
-    }
-
-    async function enterSite() {
-      document.querySelector(".click-to-enter").style.display = "none";
-      document.querySelector(".main-content").style.display = "flex";
-      audio.play();
-      isPlaying = true;
-      typeText(document.getElementById("username"), "M819 Dekuu", 120, async function () {
-        const statusData = await fetchDiscordStatus();
-        typeText(document.getElementById("discord-status"), statusData.status, 120);
-        typeText(document.getElementById("game-status"), statusData.playing || "No current activity", 120);
-      });
     }
   </script>
 </head>
@@ -280,8 +264,7 @@
     <div class="profile-container">
       <img src="profile.png" class="profile-pic" alt="Profile">
       <div id="username" class="username"></div>
-      <div id="discord-status" class="info-box">Loading status...</div>
-      <div id="game-status" class="info-box">Loading activity...</div>
+      <div class="info-box" id="game-status">Loading status...</div>
 
       <div class="icons">
         <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube"></a>
