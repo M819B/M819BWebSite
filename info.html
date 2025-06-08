@@ -53,40 +53,44 @@
     .icons a img {
       width: 24px;
       height: 24px;
-      margin: 0 6px;
+      margin: 0 8px;
     }
     .music-player {
       position: fixed;
-      bottom: 20px;
+      bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
-      background-color: rgba(0, 0, 0, 0.75);
+      background-color: rgba(0, 0, 0, 0.85);
       display: flex;
       align-items: center;
-      padding: 10px 20px;
-      border-radius: 12px;
+      padding: 14px 24px;
+      border-radius: 16px;
       color: white;
-      gap: 12px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      gap: 16px;
+      box-shadow: 0 0 20px rgba(255, 75, 92, 0.8);
       font-family: Arial, sans-serif;
       z-index: 10;
     }
     .music-player input[type="range"] {
-      width: 100px;
+      width: 150px;
     }
     .music-player .song-time {
-      font-size: 12px;
-    }
-    .music-player .song-title {
-      display: none;
+      font-size: 14px;
     }
     .play-btn {
-      background: url('play-button.png') no-repeat center center;
-      background-size: contain;
-      width: 24px;
-      height: 24px;
+      background-color: #ff4b5c;
       border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      color: white;
       cursor: pointer;
+      box-shadow: 0 0 10px #ff4b5c;
+      transition: background 0.3s;
+    }
+    .play-btn:hover {
+      background-color: #ff6b81;
     }
     @keyframes pulse {
       0% { transform: scale(1); }
@@ -119,7 +123,7 @@
     <span class="song-time" id="current-time">0:00</span>
     <input type="range" id="seekbar" value="0" min="0" max="100">
     <span class="song-time" id="duration">3:12</span>
-    <button class="play-btn" onclick="toggleMusic()"></button>
+    <button class="play-btn" onclick="toggleMusic()">▶</button>
   </div>
   <script>
     let audio = new Audio('chill-music.mp3');
