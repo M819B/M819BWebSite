@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title id="tab-title">M819 Dekuu</title>
-  <link rel="icon" type="image/png" href="dekuu-icon.gif" />
+  <link rel="icon" type="image/png" href="dekuu-icon.png" />
 
   <style>
     * {
@@ -30,7 +30,6 @@
       min-height: 100%;
       object-fit: cover;
       z-index: -1;
-      background: black;
     }
 
     .click-to-enter {
@@ -200,47 +199,48 @@
       type();
     }
 
-    function getReadableStatus(status) {
-      switch (status) {
-        case "online": return {text: "Online", className: "online"};
-        case "idle": return {text: "Idle", className: "idle"};
-        case "dnd": return {text: "Do Not Disturb", className: "dnd"};
-        case "offline": return {text: "Offline", className: "offline"};
-        default: return {text: "Unknown", className: "offline"};
-      }
-    }
-
     async function fetchDiscordStatus() {
-      const userId = "726790429055385620"; // Your Discord user ID
+      const userId = "726790429055385620"; // Replace with your Discord user ID
       try {
         const res = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
         const data = await res.json();
 
         if (!data.success) {
-          return { status: {text:"Status not available", className:"offline"}, playing: "" };
+          return "Status not available";
         }
 
         const discordData = data.data;
-        const statusInfo = getReadableStatus(discordData.discord_status);
 
-        // Find playing activity (type 0)
-        const playingActivity = discordData.activities.find(activity => activity.type === 0);
-        // Find custom status (type 4)
-        const customStatus = discordData.activities.find(activity => activity.type === 4);
-
-        let playingText = "";
-        if (playingActivity) {
-          playingText = `🎮 Playing ${playingActivity.name}`;
-        } else if (customStatus && customStatus.state) {
-          playingText = `💬 ${customStatus.state}`;
+        if (discordData.discord_status === "offline") {
+          return "Offline";
         }
 
-        return { status: statusInfo, playing: playingText };
+        // Look for Playing activity (type 0) or Custom Status (type 4)
+        const playingActivity = discordData.activities.find(activity => activity.type === 0);
+        const customStatus = discordData.activities.find(activity => activity.type === 4);
+
+        if (playingActivity) {
+          return `🎮 Playing ${playingActivity.name}`;
+        } else if (customStatus && customStatus.state) {
+          return `💬 ${customStatus.state}`;
+        } else {
+          return `Online - ${discordData.discord_status}`;
+        }
       } catch (error) {
-        return { status: {text:"Error fetching status", className:"offline"}, playing: "" };
+        return "Error fetching status";
       }
     }
-    
+
+    async function enterSite() {
+      document.querySelector(".click-to-enter").style.display = "none";
+      document.querySelector(".main-content").style.display = "flex";
+      audio.play();
+      isPlaying = true;
+      typeText(document.getElementById("username"), "M819 Dekuu", 120, async function () {
+        const status = await fetchDiscordStatus();
+        typeText(document.getElementById("game-status"), status, 120);
+      });
+    }
   </script>
 </head>
 
@@ -269,7 +269,6 @@
 
       <div class="icons">
         <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube"></a>
-        <a href="https://www.roblox.com/users/1936761233/profile" target="_blank"><img src="roblox.png" alt="Roblox"></a>
         <a href="https://discord.com/users/726790429055385620" target="_blank"><img src="discord.png" alt="Discord"></a>
         <a href="https://open.spotify.com/user/31dgudzlolnvguv6mabfdf4vzzbe" target="_blank"><img src="spotify.png" alt="Spotify"></a>
       </div>
