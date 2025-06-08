@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title id="tab-title">M819 Dekuu</title>
-  <link rel="icon" type="image/png" href="dekuu-icon.png" />
+  <link rel="icon" type="image/png" href="dekuu-icon.gif" />
 
   <style>
     * {
@@ -18,13 +18,8 @@
       width: 100%;
       font-family: 'Arial Black', sans-serif;
       overflow: hidden;
-      background: #121212;
+      background: black;
       color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      gap: 20px;
     }
 
     video#bg-video {
@@ -35,6 +30,8 @@
       height: 100vh;
       object-fit: cover;
       z-index: -1;
+      background: black;
+      display: block; /* Ensure video is visible */
     }
 
     .click-to-enter {
@@ -98,7 +95,26 @@
       border-radius: 10px;
       margin-top: 12px;
       font-weight: bold;
+      min-height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
     }
+
+    .status-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* Status colors */
+    .online { background-color: #43b581; } /* Green */
+    .idle { background-color: #faa61a; } /* Yellow */
+    .dnd { background-color: #f04747; } /* Red */
+    .offline { background-color: #747f8d; } /* Grey */
 
     .icons {
       display: flex;
@@ -149,42 +165,6 @@
       100% { transform: scale(1); }
     }
 
-    /* Discord Status Section Styles */
-    #discord-status-container {
-      background: rgba(34, 34, 34, 0.9);
-      padding: 20px;
-      border-radius: 15px;
-      max-width: 400px;
-      width: 100%;
-      text-align: center;
-      color: white;
-      box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
-      font-family: Arial, sans-serif;
-      z-index: 10;
-    }
-
-    #status-circle {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: gray;
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    #status-text {
-      font-size: 1.2rem;
-      display: inline-block;
-      margin-left: 10px;
-      vertical-align: middle;
-    }
-
-    #playing {
-      margin-top: 10px;
-      font-size: 1rem;
-      font-style: italic;
-    }
-
     @media screen and (max-width: 600px) {
       .profile-container {
         max-width: 90%;
@@ -207,10 +187,6 @@
       .music-controls {
         left: 10px;
         top: 10px;
-      }
-
-      #discord-status-container {
-        max-width: 90%;
       }
     }
   </style>
@@ -244,57 +220,62 @@
       type();
     }
 
-    function enterSite() {
-      document.querySelector(".click-to-enter").style.display = "none";
-      document.querySelector(".main-content").style.display = "flex";
-      document.getElementById('discord-status-container').style.display = "block";
-      audio.play();
-      isPlaying = true;
-      typeText(document.getElementById("username"), "M819 Dekuu", 120, function () {
-        typeText(document.getElementById("game-status"), "🎮 Playing Minecraft", 120);
-      });
-      loadDiscordStatus();
-    }
-
-    // Discord User ID to show status for
-    const userId = '726790429055385620'; // <-- Replace with your Discord user ID
-
-    function setStatus(status) {
-      const statusCircle = document.getElementById('status-circle');
-      const statusText = document.getElementById('status-text');
-
+    function getReadableStatus(status) {
       switch (status) {
-        case 'online':
-          statusCircle.style.background = 'limegreen';
-          statusText.textContent = 'Online';
-          break;
-        case 'idle':
-          statusCircle.style.background = 'yellow';
-          statusText.textContent = 'Idle/Away';
-          break;
-        case 'dnd':
-          statusCircle.style.background = 'red';
-          statusText.textContent = 'Do Not Disturb';
-          break;
-        case 'offline':
-        default:
-          statusCircle.style.background = 'gray';
-          statusText.textContent = 'Offline';
-          break;
+        case "online": return {text: "Online", className: "online"};
+        case "idle": return {text: "Idle", className: "idle"};
+        case "dnd": return {text: "Do Not Disturb", className: "dnd"};
+        case "offline": return {text: "Offline", className: "offline"};
+        default: return {text: "Unknown", className: "offline"};
       }
     }
 
-    async function loadDiscordStatus() {
-      // Discord presence info requires a bot token and backend, so here
-      // we simulate the status display with placeholder data.
+    async function fetchDiscordStatus() {
+      const userId = "726790429055385620"; // Your Discord user ID
+      try {
+        const res = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
+        const data = await res.json();
 
-      // Show user ID:
-      document.getElementById('discord-user-id').textContent = userId;
+        if (!data.success) {
+          return { status: {text:"Status not available", className:"offline"}, playing: "" };
+        }
 
-      // Fake demo status - you can change this to test:
-      // For actual real-time presence, backend with bot is required.
-      setStatus('offline');
-      document.getElementById('playing').textContent = 'Playing status unavailable (requires Discord bot backend)';
+        const discordData = data.data;
+        const statusInfo = getReadableStatus(discordData.discord_status);
+
+        // Find playing activity (type 0)
+        const playingActivity = discordData.activities.find(activity => activity.type === 0);
+        // Find custom status (type 4)
+        const customStatus = discordData.activities.find(activity => activity.type === 4);
+
+        let playingText = "";
+        if (playingActivity) {
+          playingText = `🎮 Playing ${playingActivity.name}`;
+        } else if (customStatus && customStatus.state) {
+          playingText = `💬 ${customStatus.state}`;
+        }
+
+        return { status: statusInfo, playing: playingText };
+      } catch (error) {
+        return { status: {text:"Error fetching status", className:"offline"}, playing: "" };
+      }
+    }
+
+    async function enterSite() {
+      document.querySelector(".click-to-enter").style.display = "none";
+      document.querySelector(".main-content").style.display = "flex";
+      audio.play();
+      isPlaying = true;
+      typeText(document.getElementById("username"), "M819 Dekuu", 120, async function () {
+        const statusData = await fetchDiscordStatus();
+
+        // Set status with colored icon
+        const discordStatusEl = document.getElementById("discord-status");
+        discordStatusEl.innerHTML = `<span class="status-icon ${statusData.status.className}"></span>${statusData.status.text}`;
+
+        // Type playing status text
+        typeText(document.getElementById("game-status"), statusData.playing || "No current activity", 120);
+      });
     }
   </script>
 </head>
@@ -302,7 +283,7 @@
 <body>
   <!-- Background Video -->
   <video id="bg-video" autoplay muted loop playsinline>
-    <source src="background.mp4" type="video/mp4" />
+    <source src="background.mp4/>
     Your browser does not support HTML5 video.
   </video>
 
@@ -312,7 +293,7 @@
   <!-- Music Controls -->
   <div class="music-controls">
     <button class="music-toggle" onclick="toggleMusic()">Music On/Off</button>
-    <input type="range" class="volume-slider" min="0" max="1" step="0.01" onchange="setVolume(this.value)" value="1" />
+    <input type="range" class="volume-slider" min="0" max="1" step="0.01" onchange="setVolume(this.value)" value="1">
   </div>
 
   <!-- Main Profile Content -->
@@ -320,8 +301,8 @@
     <div class="profile-container">
       <img src="profile.png" class="profile-pic" alt="Profile" />
       <div id="username" class="username"></div>
-      <div class="info-box">Playing Minecraft all day.</div>
-      <div id="game-status" class="info-box"></div>
+      <div id="discord-status" class="info-box">Loading status...</div>
+      <div id="game-status" class="info-box">Loading activity...</div>
 
       <div class="icons">
         <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube" /></a>
@@ -330,19 +311,6 @@
         <a href="https://open.spotify.com/user/31dgudzlolnvguv6mabfdf4vzzbe" target="_blank"><img src="spotify.png" alt="Spotify" /></a>
       </div>
     </div>
-  </div>
-
-  <!-- Discord Status Section -->
-  <div id="discord-status-container" style="display:none;">
-    <h2>Discord Status</h2>
-    <div>
-      <strong>User ID:</strong> <span id="discord-user-id"></span>
-    </div>
-    <div style="margin-top:10px;">
-      <span id="status-circle"></span>
-      <span id="status-text">Loading status...</span>
-    </div>
-    <div id="playing">Loading playing status...</div>
   </div>
 </body>
 </html>
