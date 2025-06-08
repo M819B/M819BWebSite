@@ -3,66 +3,225 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title id="tab-title">M819 Dekuu</title>
-  <link rel="icon" type="image/png" href="dekuu-icon.gif" />
+  <title>@ d e k u u</title>
+  <link rel="icon" type="image/png" href="dekuu-icon.png" />
 
   <style>
-    /* (rest of your styles are unchanged) */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* Add this */
-    .tagline {
-      position: absolute;
-      top: 10px;
-      width: 100%;
-      text-align: center;
-      font-size: 1.8rem;
+    body {
+      font-family: 'Arial Black', sans-serif;
+      overflow: hidden;
       color: white;
+      text-align: center;
+    }
+
+    video#bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .click-to-enter {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 32px;
       font-weight: bold;
-      z-index: 20;
-      letter-spacing: 8px;
-      text-shadow: 2px 2px 8px #000;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .main-content {
+      display: none;
+      height: 100vh;
+      width: 100vw;
+      padding-top: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+    }
+
+    .profile-container {
+      background: rgba(0, 0, 0, 0.85);
+      padding: 40px;
+      border-radius: 30px;
+      box-shadow: 0 0 35px rgba(255, 75, 92, 0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 90%;
+      max-width: 420px;
+    }
+
+    .profile-pic {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      border: 4px solid #ff4b5c;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .username {
+      font-size: 36px;
+      margin-top: 20px;
+      background: linear-gradient(90deg, #ff4b5c, #ff6b81);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 3px 3px 10px rgba(255, 75, 92, 0.8);
+    }
+
+    .info-box {
+      background: #222;
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 15px;
+      box-shadow: 0 0 20px rgba(255, 75, 92, 0.7);
+      width: 90%;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .icons {
+      margin-top: 30px;
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .icons a img {
+      width: 60px;
+      height: 60px;
+      transition: transform 0.3s ease;
+    }
+
+    .icons a:hover img {
+      transform: scale(1.3);
+      filter: drop-shadow(0 0 20px #ff4b5c);
+    }
+
+    .music-controls {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      flex-direction: column;
+      z-index: 15;
+    }
+
+    .music-toggle {
+      background: #ff4b5c;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .volume-slider {
+      width: 160px;
     }
 
     @media screen and (max-width: 600px) {
-      .tagline {
-        font-size: 1.2rem;
-        letter-spacing: 6px;
+      .username {
+        font-size: 26px;
+      }
+
+      .music-controls {
+        top: 10px;
+        left: 10px;
+      }
+
+      .click-to-enter {
+        font-size: 24px;
       }
     }
   </style>
 
   <script>
-    // (same script as before, unchanged)
+    let audio = new Audio('chill-music.mp3');
+    audio.loop = true;
+    let isPlaying = false;
+
+    function toggleMusic() {
+      if (isPlaying) {
+        audio.pause();
+      } else {
+        audio.play();
+      }
+      isPlaying = !isPlaying;
+    }
+
+    function setVolume(vol) {
+      audio.volume = vol;
+    }
+
+    function typeText(element, text, speed, callback) {
+      let i = 0;
+      element.innerHTML = "";
+      function type() {
+        if (i < text.length) {
+          element.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        } else {
+          if (callback) callback();
+        }
+      }
+      type();
+    }
+
+    function enterSite() {
+      document.querySelector(".click-to-enter").style.display = "none";
+      document.querySelector(".main-content").style.display = "flex";
+      typeText(document.getElementById("username"), "M819 Dekuu", 150, function () {
+        typeText(document.getElementById("game-status"), "🎮 Playing Minecraft", 150);
+      });
+      audio.play();
+      isPlaying = true;
+    }
   </script>
 </head>
 
 <body>
-  <!-- Background Video -->
   <video id="bg-video" autoplay muted loop playsinline>
-    <source src="background.mp4" type="video/mp4">
+    <source src="background.mp4" type="video/mp4" />
     Your browser does not support HTML5 video.
   </video>
 
-  <!-- Click to Enter -->
   <div class="click-to-enter" onclick="enterSite()">Click to Enter...</div>
 
-  <!-- Music Controls -->
   <div class="music-controls">
     <button class="music-toggle" onclick="toggleMusic()">Music On/Off</button>
-    <input type="range" class="volume-slider" min="0" max="1" step="0.01" onchange="setVolume(this.value)" value="1">
+    <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="1" onchange="setVolume(this.value)" />
   </div>
 
-  <!-- Tagline on top -->
-  <div class="tagline">@ d e k u u</div>
-
-  <!-- Main Profile Content -->
   <div class="main-content">
     <div class="profile-container">
-      <img src="profile.png" class="profile-pic" alt="Profile">
+      <img src="profile.png" class="profile-pic" alt="Profile Picture" />
       <div id="username" class="username"></div>
       <div class="info-box">Playing Minecraft all day.</div>
       <div id="game-status" class="info-box"></div>
-
       <div class="icons">
         <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube"></a>
         <a href="https://www.roblox.com/users/1936761233/profile" target="_blank"><img src="roblox.png" alt="Roblox"></a>
