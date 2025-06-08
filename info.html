@@ -3,103 +3,109 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title id="tab-title">M819 Dekuu</title>
+  <title id="tab-title">@ d e k u u</title>
   <link rel="icon" type="image/png" href="dekuu-icon.png" />
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      height: 100%; width: 100%;
-      font-family: 'Arial Black', sans-serif;
-      overflow: hidden;
-    }
+    html, body { height:100%; width:100%; font-family:'Arial Black',sans-serif; overflow:hidden; }
     video#bg-video {
-      position: fixed; top: 0; left: 0;
-      min-width: 100%; min-height: 100%;
-      object-fit: cover; z-index: -1;
+      position:fixed; top:0; left:0;
+      min-width:100%; min-height:100%;
+      object-fit:cover; z-index:-1;
     }
+
     .click-to-enter {
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      display: flex; justify-content: center; align-items: center;
-      background-color: rgba(0, 0, 0, 0.7); color: #fff;
-      font-size: 2rem; font-weight: bold; z-index: 10;
-      text-align: center; padding: 20px; cursor: pointer;
+      position:absolute; inset:0;
+      display:flex; justify-content:center; align-items:center;
+      background-color:rgba(0,0,0,0.7);
+      color:#fff; font-size:2rem; font-weight:bold;
+      z-index:10; text-align:center; padding:20px;
+      cursor:pointer;
     }
+
     .main-content {
-      display: none; height: 100vh; width: 100vw;
-      display: flex; justify-content: center; align-items: center;
-      padding: 20px;
+      display:none; height:100vh; width:100vw;
+      display:flex; justify-content:center; align-items:center;
+      padding:20px;
     }
+
     .profile-container {
-      background: rgba(0, 0, 0, 0.85);
-      padding: 30px; border-radius: 20px;
-      box-shadow: 0 0 25px rgba(255, 75, 92, 0.8);
-      max-width: 400px; width: 100%;
-      text-align: center; color: white; z-index: 5;
+      background:rgba(0,0,0,0.85);
+      padding:30px; border-radius:20px;
+      box-shadow:0 0 25px rgba(255,75,92,0.8);
+      max-width:400px; width:100%;
+      text-align:center; color:white; z-index:5;
     }
+
     .profile-pic {
-      width: 120px; height: 120px;
-      border-radius: 50%; border: 4px solid #ff4b5c;
-      animation: pulse 2s infinite;
+      width:120px; height:120px;
+      border-radius:50%; border:4px solid #ff4b5c;
+      animation:pulse 2s infinite;
     }
+
     .username {
-      font-size: 28px; margin-top: 15px;
-      background: linear-gradient(90deg, #ff4b5c, #ff6b81);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 3px 3px 10px rgba(255, 75, 92, 0.8);
+      font-size:28px; margin-top:15px;
+      background:linear-gradient(90deg,#ff4b5c,#ff6b81);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      text-shadow:3px 3px 10px rgba(255,75,92,0.8);
     }
+
     .info-box {
-      background: #222;
-      padding: 12px; border-radius: 10px;
-      margin-top: 12px; font-weight: bold;
+      background:#222;
+      padding:12px; border-radius:10px;
+      margin-top:12px; font-weight:bold;
     }
+
     .icons {
-      display: flex; justify-content: center;
-      gap: 20px; flex-wrap: wrap; margin-top: 20px;
+      display:flex; justify-content:center;
+      gap:20px; flex-wrap:wrap; margin-top:20px;
     }
+
     .icons img {
-      width: 50px; height: 50px;
-      transition: transform 0.3s ease;
+      width:50px; height:50px;
+      transition:transform 0.3s;
     }
+
     .icons a:hover img {
-      transform: scale(1.2);
-      filter: drop-shadow(0 0 10px #ff4b5c);
+      transform:scale(1.2);
+      filter:drop-shadow(0 0 10px #ff4b5c);
     }
+
     .music-controls {
-      position: absolute; top: 20px; left: 20px;
-      z-index: 15; display: flex; flex-direction: column; gap: 10px;
+      position:absolute; top:20px; left:20px;
+      z-index:15; display:flex; flex-direction:column; gap:10px;
     }
+
     .music-toggle {
-      background: #ff4b5c; color: white;
-      padding: 10px; border: none;
-      border-radius: 8px; cursor: pointer; font-weight: bold;
+      background:#ff4b5c; color:white;
+      padding:10px; border:none;
+      border-radius:8px; cursor:pointer;
+      font-weight:bold;
     }
-    .volume-slider { width: 150px; }
+
+    .volume-slider { width:150px; }
+
     @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
+      0%,100% { transform:scale(1); }
+      50% { transform:scale(1.05); }
     }
-    @media screen and (max-width: 600px) {
-      .profile-container { max-width: 90%; padding: 20px; }
-      .username { font-size: 24px; }
-      .click-to-enter { font-size: 1.5rem; }
-      .icons img { width: 40px; height: 40px; }
-      .music-controls { left: 10px; top: 10px; }
+
+    @media screen and (max-width:600px) {
+      .profile-container { max-width:90%; padding:20px; }
+      .username { font-size:24px; }
+      .click-to-enter { font-size:1.5rem; }
+      .icons img { width:40px; height:40px; }
+      .music-controls { left:10px; top:10px; }
     }
   </style>
 
   <script>
-    let audio = new Audio('chill-music.mp3');
+    let audio = new Audio('chill-music.mp3'); audio.loop = true;
     let isPlaying = false;
 
     function toggleMusic() {
-      if (isPlaying) {
-        audio.pause();
-      } else {
-        audio.play();
-      }
+      isPlaying ? audio.pause() : audio.play();
       isPlaying = !isPlaying;
     }
 
@@ -108,8 +114,7 @@
     }
 
     function typeText(el, text, speed, cb) {
-      let i = 0;
-      el.innerHTML = "";
+      let i = 0; el.innerHTML = "";
       function type() {
         if (i < text.length) {
           el.innerHTML += text.charAt(i++);
@@ -119,35 +124,35 @@
       type();
     }
 
+    async function updateDiscordStatus() {
+      try {
+        const res = await fetch("https://api.lanyard.rest/v1/users/726790429055385620");
+        const { discord_status, activities } = (await res.json()).data;
+
+        let stat = "⚫ Offline";
+        if (discord_status === 'online') stat = "🟢 Online";
+        else if (discord_status === 'idle') stat = "🌙 Idle";
+        else if (discord_status === 'dnd') stat = "⛔ Do Not Disturb";
+
+        const act = activities.find(a => a.type === 0 || a.type === 2);
+        const actText = act && act.details ? ` · ${act.name}: ${act.details}` : '';
+
+        document.getElementById("game-status").textContent = `${stat}${actText}`;
+      } catch (e) {
+        document.getElementById("game-status").textContent = "⚠️ Error loading Discord status";
+        console.error("Discord error:", e);
+      }
+    }
+
     function enterSite() {
       document.querySelector(".click-to-enter").style.display = "none";
       document.querySelector(".main-content").style.display = "flex";
-      audio.play();
-      isPlaying = true;
-      fetchRobloxData();
-      typeText(document.getElementById("username"), "M819 Dekuu", 120, function () {
-        typeText(document.getElementById("game-status"), "🎮 Playing Minecraft", 120);
+      audio.play(); isPlaying = true;
+
+      typeText(document.getElementById("username"), "M819 Dekuu", 120, () => {
+        updateDiscordStatus();
+        setInterval(updateDiscordStatus, 30000);
       });
-    }
-
-    function fetchRobloxData() {
-      const userId = 1936761233;
-      const nameUrl = `https://users.roblox.com/v1/users/${userId}`;
-      const avatarUrl = `https://thumbnails.roblox.com/v1/users/avatar?userIds=${userId}&size=150x150&format=Png&isCircular=true`;
-
-      fetch(nameUrl)
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById('roblox-name').textContent = `Roblox: ${data.displayName} (@${data.name})`;
-        });
-
-      fetch(avatarUrl)
-        .then(res => res.json())
-        .then(data => {
-          if (data.data && data.data.length > 0) {
-            document.getElementById('roblox-avatar').src = data.data[0].imageUrl;
-          }
-        });
     }
   </script>
 </head>
@@ -155,23 +160,21 @@
 <body>
   <video id="bg-video" autoplay muted loop playsinline>
     <source src="background.mp4" type="video/mp4">
-    Your browser does not support HTML5 video.
   </video>
 
   <div class="click-to-enter" onclick="enterSite()">Click to Enter...</div>
 
   <div class="music-controls">
     <button class="music-toggle" onclick="toggleMusic()">Music On/Off</button>
-    <input type="range" class="volume-slider" min="0" max="1" step="0.01" onchange="setVolume(this.value)" value="1">
+    <input class="volume-slider" type="range" min="0" max="1" step="0.01" onchange="setVolume(this.value)" value="1">
   </div>
 
   <div class="main-content">
     <div class="profile-container">
-      <img id="roblox-avatar" src="profile.png" class="profile-pic" alt="Profile">
+      <img src="profile.png" class="profile-pic" alt="Profile">
       <div id="username" class="username"></div>
       <div class="info-box">Playing Minecraft all day.</div>
       <div id="game-status" class="info-box"></div>
-      <div id="roblox-name" class="info-box">Loading Roblox...</div>
 
       <div class="icons">
         <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube"></a>
