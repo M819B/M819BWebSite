@@ -18,6 +18,8 @@
       width: 100%;
       font-family: 'Arial Black', sans-serif;
       overflow: hidden;
+      background: black;
+      color: white;
     }
 
     video#bg-video {
@@ -197,46 +199,46 @@
       type();
     }
 
-async function fetchDiscordStatus() {
-  const userId = "726790429055385620"; // Your Discord user ID
-  const res = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
-  const data = await res.json();
+    async function fetchDiscordStatus() {
+      const userId = "726790429055385620"; // Replace with your Discord user ID
+      try {
+        const res = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
+        const data = await res.json();
 
-  if (!data.success) {
-    return "Status not available";
-  }
+        if (!data.success) {
+          return "Status not available";
+        }
 
-  const discordData = data.data;
+        const discordData = data.data;
 
-  if (discordData.discord_status === "offline") {
-    return "Offline";
-  }
+        if (discordData.discord_status === "offline") {
+          return "Offline";
+        }
 
-  // Try to find a "Playing" activity or custom status
-  const playingActivity = discordData.activities.find(activity => 
-    activity.type === 0 // type 0 = Playing
-  );
+        // Look for Playing activity (type 0) or Custom Status (type 4)
+        const playingActivity = discordData.activities.find(activity => activity.type === 0);
+        const customStatus = discordData.activities.find(activity => activity.type === 4);
 
-  const customStatus = discordData.activities.find(activity => 
-    activity.type === 4 // type 4 = Custom Status
-  );
+        if (playingActivity) {
+          return `🎮 Playing ${playingActivity.name}`;
+        } else if (customStatus && customStatus.state) {
+          return `💬 ${customStatus.state}`;
+        } else {
+          return `Online - ${discordData.discord_status}`;
+        }
+      } catch (error) {
+        return "Error fetching status";
+      }
+    }
 
-  if (playingActivity) {
-    return `🎮 Playing ${playingActivity.name}`;
-  } else if (customStatus && customStatus.state) {
-    return `💬 ${customStatus.state}`;
-  } else {
-    return `Online - ${discordData.discord_status}`;
-  }
-}
-
-    function enterSite() {
+    async function enterSite() {
       document.querySelector(".click-to-enter").style.display = "none";
       document.querySelector(".main-content").style.display = "flex";
       audio.play();
       isPlaying = true;
-      typeText(document.getElementById("username"), "M819 Dekuu", 120, function () {
-        fetchDiscordStatus();
+      typeText(document.getElementById("username"), "M819 Dekuu", 120, async function () {
+        const status = await fetchDiscordStatus();
+        typeText(document.getElementById("game-status"), status, 120);
       });
     }
   </script>
@@ -267,7 +269,6 @@ async function fetchDiscordStatus() {
 
       <div class="icons">
         <a href="https://www.youtube.com/@M819_Dekuu" target="_blank"><img src="youtube.png" alt="YouTube"></a>
-        <a href="https://www.roblox.com/users/1936761233/profile" target="_blank"><img src="roblox.png" alt="Roblox"></a>
         <a href="https://discord.com/users/726790429055385620" target="_blank"><img src="discord.png" alt="Discord"></a>
         <a href="https://open.spotify.com/user/31dgudzlolnvguv6mabfdf4vzzbe" target="_blank"><img src="spotify.png" alt="Spotify"></a>
       </div>
