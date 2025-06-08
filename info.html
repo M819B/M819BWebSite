@@ -196,20 +196,20 @@
     let isPlaying = false;
     const bgVideo = document.getElementById('bg-video');
 
-    // Add error handling for video loading
+    // This part handles errors if the video can't load.
+    // It will show an alert and log an error to your browser's console (F12).
     bgVideo.addEventListener('error', (e) => {
       console.error('Error loading background video:', e);
-      // If video fails, hide it and ensure background is black
-      bgVideo.style.display = 'none'; 
-      document.body.style.background = 'black'; 
-      alert("Error: Background video could not be loaded. Check the video file path or format."); 
+      bgVideo.style.display = 'none';
+      document.body.style.background = 'black';
+      alert("Uh oh! The background video couldn't load. This usually means the 'background.mp4' file isn't in the 'videos' folder, or its name isn't exactly 'background.mp4', or the video file itself has a problem. Check your GitHub repository's file structure and the console for more details!");
     });
 
     function toggleMusic() {
       if (isPlaying) {
         audio.pause();
       } else {
-        audio.play().catch(e => console.error("Error playing audio:", e)); 
+        audio.play().catch(e => console.error("Error playing audio:", e));
       }
       isPlaying = !isPlaying;
     }
@@ -275,7 +275,7 @@
     async function enterSite() {
       document.querySelector(".click-to-enter").style.display = "none";
       document.querySelector(".main-content").style.display = "flex";
-      audio.play().catch(e => console.error("Error playing audio after click:", e)); 
+      audio.play().catch(e => console.error("Error playing audio after click:", e));
       isPlaying = true;
       typeText(document.getElementById("username"), "M819 Dekuu", 120, async function () {
         const statusData = await fetchDiscordStatus();
