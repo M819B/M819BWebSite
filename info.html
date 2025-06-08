@@ -47,8 +47,16 @@
       -webkit-text-fill-color: transparent;
       text-shadow: 3px 3px 10px rgba(255, 75, 92, 0.8);
     }
+    .icons {
+      margin-top: 15px;
+    }
+    .icons a img {
+      width: 30px;
+      height: 30px;
+      margin: 0 10px;
+    }
     .music-player {
-      position: absolute;
+      position: fixed;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
@@ -61,6 +69,7 @@
       gap: 12px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
       font-family: Arial, sans-serif;
+      z-index: 10;
     }
     .music-player input[type="range"] {
       width: 100px;
